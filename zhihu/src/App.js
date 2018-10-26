@@ -14,7 +14,7 @@ class App extends Component {
     if (this.props.isLoading) return;
     const scrollHeight = document.body.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.body.clientHeight;
+    const clientHeight = this.containerDom.clientHeight;
     if (scrollHeight - scrollTop < clientHeight) {
       this.props.fetchArticles();
     }

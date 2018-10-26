@@ -42,7 +42,6 @@ const bestValue2 = (cakes, c) => {
         arr[i] = [];
         for (let j = 0; j <= c; j++) {
             arr[i][j] = arr[i - 1][j];
-            if (j === 10) debugger;
             if (j >= cakes[i].needCoupons) {
                 const now = arr[i][j];
                 const pre = cakes[i].price + arr[i - 1][j - cakes[i].needCoupons];
