@@ -41,7 +41,6 @@ const bestValue2 = (cakes, c) => {
     for (let i = 1; i < n; i++) {
         arr[i] = [];
         for (let j = 0; j <= c; j++) {
-            console.log(i, j);
             arr[i][j] = arr[i - 1][j];
             if (j === 10) debugger;
             if (j >= cakes[i].needCoupons) {
@@ -51,7 +50,6 @@ const bestValue2 = (cakes, c) => {
             }
         }
     }
-    console.log('arr: ', arr);
     return arr[n - 1][c];
 }
 
@@ -62,7 +60,6 @@ const pickCake = (couponNum, cakes) => {
             pool.push(cake);
     })
 
-    // return bestValue(pool, couponNum, pool.length - 1);
     return bestValue2(pool, couponNum);
 }
 
