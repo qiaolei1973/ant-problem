@@ -10,7 +10,6 @@
 /** 
  * 就这个问题来说当然一眼就能看出来是B*6+C*1,不过我觉得这道题的考查点应该在于背包问题..
 */
-const arr = [];
 
 /**
  * 完全背包问题
@@ -27,7 +26,6 @@ const bestValue = (cakes, c, index) => {
     if (c >= weight) {
         res = Math.max(res, value + bestValue(cakes, c - weight, index - 1));
     }
-    arr.push(cakes[index].cakeName);
     return res;
 }
 
@@ -35,21 +33,41 @@ const bestValue = (cakes, c, index) => {
 const bestValue2 = (cakes, c) => {
     const n = cakes.length;
     const arr = [[]];
+    const items = [[]];
     for (let j = 0; j <= c; j++) {
-        arr[0][j] = j >= cakes[0].needCoupons ? cakes[0].price : 0;
+        if (j >= cakes[0].needCoupons) {
+            arr[0][j] = cakes[0].price;
+            items[0][j] = [cakes[0].cakeName];
+        } else {
+            arr[0][j] = 0;
+            items[0][j] = [];
+        }
     }
     for (let i = 1; i < n; i++) {
         arr[i] = [];
+        items[i] = [];
         for (let j = 0; j <= c; j++) {
+            const value = cakes[i].price;
+            const weight = cakes[i].needCoupons;
+            const { cakeName } = cakes[i];
+
             arr[i][j] = arr[i - 1][j];
+            items[i][j] = items[i - 1][j];
+
             if (j >= cakes[i].needCoupons) {
-                const now = arr[i][j];
-                const pre = cakes[i].price + arr[i - 1][j - cakes[i].needCoupons];
-                arr[i][j] = Math.max(now, pre);
+                const beforePlus = arr[i][j];
+                const afterPlus = value + arr[i - 1][j - weight];
+                arr[i][j] = Math.max(beforePlus, afterPlus);
+                if (afterPlus > beforePlus) {
+                    const smallOne = items[i - 1][j - weight];
+                    items[i][j] = [cakeName, ...smallOne];
+                }
             }
         }
     }
-    return arr[n - 1][c];
+    const maxPrice = arr[n - 1][c];
+    const maxItems = items.pop().pop();
+    return maxItems;
 }
 
 const pickCake = (couponNum, cakes) => {
@@ -59,6 +77,7 @@ const pickCake = (couponNum, cakes) => {
             pool.push(cake);
     })
 
+    // return bestValue(pool, couponNum, pool.length - 1);
     return bestValue2(pool, couponNum);
 }
 
@@ -69,5 +88,3 @@ console.log('pickCake: ',
         { cakeName: 'B', price: 90, needCoupons: 3 },
         { cakeName: 'C', price: 15, needCoupons: 2 }
     ]));
-
-console.log(arr);
